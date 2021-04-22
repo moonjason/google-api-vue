@@ -38,9 +38,6 @@
 </template>
 
 <script>
-  const api = `https://newsapi.org/v2/everything?q={{searchTerm}}`; 
-  const apiKey = "&apiKey=4cd6ebeef6654d8aadb92ed84e1d5390"; 
-
   export default {
     name: 'app',
     data () {
@@ -55,10 +52,14 @@
     methods: { 
       search: function (searchTerm){ 
         if(!searchTerm || searchTerm.length < 1 ) return;
-        let url = api.replace('{{searchTerm}}', searchTerm) 
-        fetch(url + apiKey)
-          .then(res => res.json())
-          .then(data => this.results = data.articles) 
+
+         fetch("https://us-central1-api-vue-3ccc8.cloudfunctions.net/api", {
+            method: 'POST', 
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ searchTerm: searchTerm }) 
+        }).then(res => res.json()).then(data => this.results = data);
       },
       toggleModal: function(url) { 
         this.showImg = url
